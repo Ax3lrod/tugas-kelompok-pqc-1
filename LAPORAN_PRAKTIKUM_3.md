@@ -1,8 +1,6 @@
 # LAPORAN TUGAS PRAKTIKUM KRIPTOGRAFI PASCA-KUANTUM
 ## MODUL 03: INTEGRASI APLIKASI WEB, API, DAN PUBLIC KEY INFRASTRUCTURE (PKI)
 
----
-
 ### Informasi Kelompok
 **Kelompok:** 1  
 **Topik:** Pengujian dan Penerapan Kriptografi Pasca-Kuantum (Post-Quantum Cryptography) pada Web, API, dan PKI  
@@ -16,8 +14,6 @@
 
 **Repositori Proyek:** [https://github.com/Ax3lrod/tugas-kelompok-pqc-1](https://github.com/Ax3lrod/tugas-kelompok-pqc-1)  
 **Waktu Pelaksanaan:** September 2026  
-
----
 
 ## DAFTAR ISI
 1. [Ringkasan Eksekutif](#1-ringkasan-eksekutif)
@@ -34,11 +30,9 @@
 6. [Kesimpulan dan Rekomendasi Arsitektur](#6-kesimpulan-dan-rekomendasi-arsitektur)
 7. [Lampiran Berkas dan Struktur Artefak](#7-lampiran-berkas-dan-struktur-artefak)
 
----
-
 ## 1. Ringkasan Eksekutif
 
-Perkembangan pesat komputasi kuantum menimbulkan ancaman eksistensial terhadap algoritma kriptografi kunci publik klasik seperti RSA, Diffie-Hellman (DH), dan Elliptic Curve Cryptography (ECDSA/ECDH) yang rentan dihancurkan oleh **Algoritma Shor**. Selain itu, skenario serangan ***Harvest Now, Decrypt Later* (HNDL)** menuntut sistem komunikasi data untuk segera mengadopsi mekanisme pertukaran kunci yang tahan kuantum.
+Perkembangan komputasi kuantum menimbulkan ancaman nyata terhadap algoritma kriptografi kunci publik klasik seperti RSA, Diffie-Hellman (DH), dan Elliptic Curve Cryptography (ECDSA/ECDH) yang rentan dihancurkan oleh **Algoritma Shor**. Selain itu, skenario serangan **Harvest Now, Decrypt Later (HNDL)** menuntut sistem komunikasi data untuk segera mengadopsi mekanisme pertukaran kunci yang tahan kuantum.
 
 Laporan ini mendokumentasikan hasil pengujian dan implementasi menyeluruh pada **Praktikum 3: Web, API, dan PKI**. Tim kami berhasil:
 1. Membangun infrastruktur *Public Key Infrastructure* (PKI) lokal berbasis algoritma tanda tangan digital kisi (**ML-DSA-65** / FIPS 204).
@@ -46,8 +40,6 @@ Laporan ini mendokumentasikan hasil pengujian dan implementasi menyeluruh pada *
 3. Mengoperasikan komunikasi TLS 1.3 hibrida (**X25519MLKEM768**) dan *Mutual TLS* (mTLS) tanpa menyisakan komponen klasik pada jalur autentikasi dan kerahasiaan.
 4. Menemukan dan menganalisis secara mendalam risiko kegagalan transmisi paket akibat pembesaran payload ClientHello (dari **217 byte** klasik menjadi **1.393 byte** hibrida) yang mendekati batas MTU 1500 di jaringan riil.
 5. Membangun gerbang otomasi (*CI verification gate*) yang terbukti secara andal meloloskan endpoint berkemampuan PQC dan menolak endpoint klasik yang mengalami regresi konfigurasi.
-
----
 
 ## 2. Tujuan Praktikum
 
@@ -59,8 +51,6 @@ Pelaksanaan praktikum ini bertujuan untuk membekali tim mahasiswa dengan keteram
 5. **Menginvestigasi Anomali Jaringan (MTU & Middlebox):** Menggunakan *packet sniffing* (`tcpdump`) untuk mengidentifikasi fragmentasi paket ClientHello dan dampaknya terhadap keandalan jaringan.
 6. **Membangun Otomasi Pengujian Regresi Kriptografi:** Menyusun skrip inspeksi kepatuhan PQC yang siap diintegrasikan ke dalam pipeline CI/CD.
 
----
-
 ## 3. Prasyarat dan Spesifikasi Lingkungan Pengujian
 
 ### 3.1 Prasyarat Modul (Analisis Dependensi)
@@ -71,18 +61,14 @@ Pelaksanaan praktikum ini bertujuan untuk membekali tim mahasiswa dengan keteram
 - **Sistem Operasi Host:** Windows 11 Pro 64-bit
 - **Container Runtime:** Docker Desktop Engine v28.3.0 (WSL2 Ubuntu Backend)
 - **Base Image:** Ubuntu 24.04 LTS (Noble Numbat)
-- **Perangkat Lunak Kriptografi:** OpenSSL 3.5.4 (Kompilasi source code: 30 September 2025)
+- **Perangkat Lunak Kriptografi:** OpenSSL 3.5.4 (Kompilasi source code resmi)
   - Engine/Provider: Default OpenSSL Provider dengan algoritma `ML-DSA-44/65/87`, `ML-KEM-512/768/1024`, dan grup hibrida `X25519MLKEM768`.
 - **Perangkat Bantu Jaringan:** `tcpdump` versi 4.99.4, `libpcap` versi 1.10.4
 - **Runtime Skrip:** Bash 5.2.21, Python 3.12.3
 
----
-
 ## 4. Alur Pelaksanaan dan Bukti Eksekusi
 
-Seluruh prosedur praktikum dijalankan secara otomatis dan terukur menggunakan skrip automasi [`run_praktikum3.sh`](file:///C:/Users/Aryasatya%20Alaauddin/quantum/tugas-kelompok1/run_praktikum3.sh). Seluruh keluaran terminal dicatat secara lengkap pada log mentah [`hasil_praktikum3/eksekusi_lab3.log`](file:///C:/Users/Aryasatya%20Alaauddin/quantum/tugas-kelompok1/hasil_praktikum3/eksekusi_lab3.log).
-
----
+Seluruh prosedur praktikum dijalankan secara otomatis dan terukur menggunakan skrip automasi `run_praktikum3.sh`. Seluruh rekaman keluaran terminal dicatat secara lengkap pada log mentah `hasil_praktikum3/eksekusi_lab3.log`.
 
 ### Langkah 1 — Membangun Otoritas Sertifikat (PKI) Pasca-Kuantum
 
@@ -119,8 +105,6 @@ openssl verify -CAfile ca.crt server.crt
 #### Dokumentasi Bukti Eksekusi Langkah 1:
 ![Bukti Eksekusi Langkah 1 - Otoritas Sertifikat PKI PQC](dokumentasi/01_pki_root_server.png)
 
----
-
 ### Langkah 2 — Pengukuran Ukuran Biner (DER) & Estimasi Anggaran Bandwidth
 
 Sertifikat pasca-kuantum memiliki kunci dan tanda tangan berbasis kisi yang jauh lebih besar daripada kurva eliptik. Untuk mengukurnya secara objektif, seluruh sertifikat diekspor ke format biner **DER** (*Distinguished Encoding Rules*) dan dibandingkan dengan kurva eliptik standar industri (**ECDSA P-256**).
@@ -142,13 +126,11 @@ $$\text{Overhead per jam} = 73,24\text{ MB/s} \times 3.600\text{ s} \approx \mat
 
 $$\text{Overhead per bulan (30 hari)} = 257,49\text{ GB/jam} \times 24 \times 30 \approx \mathbf{181,05\text{ TB/bulan}}$$
 
-> **Analisis Kritis Kelompok:**  
-> Penambahan transmisi data sebesar **~181 TB per bulan** hanya untuk pertukaran sertifikat selama *handshake*. Jika diasumsikan biaya *data egress* penyedia cloud adalah \$0,08 per GB, migrasi ke sertifikat PQC tanpa teknik optimasi (seperti *session resumption* atau kompresi sertifikat RFC 8879) akan menambah biaya operasional cloud sebesar **~\$14.800/bulan**. Data empiris ini membuktikan bahwa tantangan utama migrasi PQC terletak pada beban tanda tangan digital dan PKI, bukan pada algoritma KEM.
+**Analisis Kritis Kelompok:**  
+Penambahan transmisi data sebesar **~181 TB per bulan** murni berasal dari pertukaran sertifikat selama proses handshake. Jika diasumsikan biaya *data egress* penyedia cloud adalah \$0,08 per GB, migrasi ke sertifikat PQC tanpa teknik optimasi (seperti *session resumption* atau kompresi sertifikat RFC 8879) akan menambah biaya operasional cloud sebesar **~\$14.800/bulan**. Data empiris ini membuktikan bahwa tantangan utama migrasi PQC terletak pada beban tanda tangan digital dan PKI, bukan pada algoritma KEM.
 
 #### Dokumentasi Bukti Eksekusi Langkah 2:
 ![Bukti Eksekusi Langkah 2 - Ukuran Biner DER & Anggaran Bandwidth](dokumentasi/02_der_bandwidth.png)
-
----
 
 ### Langkah 3 — Penerapan Server dan Klien TLS 1.3 Pasca-Kuantum Penuh
 
@@ -180,8 +162,6 @@ Verify return code: 0 (ok)
 
 #### Dokumentasi Bukti Eksekusi Langkah 3:
 ![Bukti Eksekusi Langkah 3 - Handshake TLS 1.3 Pasca-Kuantum Penuh](dokumentasi/03_tls13_pqc_handshake.png)
-
----
 
 ### Langkah 4 — Implementasi Mutual TLS (mTLS) Antar-Layanan
 
@@ -227,8 +207,6 @@ openssl s_server -cert server.crt -key server.key -accept 4434 \
 #### Dokumentasi Bukti Eksekusi Langkah 4:
 ![Bukti Eksekusi Langkah 4 - mTLS Antar-Layanan](dokumentasi/04_mtls_service_mesh.png)
 
----
-
 ### Langkah 5 — Analisis Wireshark/tcpdump: Fenomena ClientHello yang Pecah
 
 Tim melakukan penangkapan paket (*packet sniffing*) menggunakan `tcpdump` untuk membandingkan paket pembuka handshake (*ClientHello*) antara mode klasik dan mode hibrida PQC.
@@ -269,14 +247,11 @@ openssl s_client -connect localhost:4435 -groups X25519MLKEM768 -tls1_3 </dev/nu
 #### Dokumentasi Bukti Eksekusi Langkah 5:
 ![Bukti Eksekusi Langkah 5 - Tangkapan Paket tcpdump](dokumentasi/05_tcpdump_clienthello_split.png)
 
----
-
 ### Langkah 6 — Implementasi Gerbang Verifikasi Kriptografi pada CI/CD
 
-Untuk mencegah terjadinya regresi kriptografi (*silent cryptographic regression*) akibat pembaruan sistem yang tidak disengaja, tim menguji skrip inspeksi [`cek_pqc.sh`](file:///C:/Users/Aryasatya%20Alaauddin/quantum/tugas-kelompok1/sumberdaya/skrip/cek_pqc.sh). Pengujian dilakukan baik terhadap skenario berhasil maupun skenario kegagalan deterministik.
+Untuk mencegah terjadinya regresi kriptografi (*silent cryptographic regression*) akibat pembaruan sistem yang tidak disengaja, tim menguji skrip inspeksi `sumberdaya/skrip/cek_pqc.sh`. Pengujian dilakukan baik terhadap skenario berhasil maupun skenario kegagalan deterministik.
 
 #### Hasil Uji Gerbang CI:
-
 ```bash
 # 1. Endpoint PQC Lokal (port 4436)
 $ bash sumberdaya/skrip/cek_pqc.sh localhost:4436
@@ -299,12 +274,10 @@ GAGAL badssl.com:443 tidak menegosiasikan X25519MLKEM768
 Kode keluar: 1 [FAIL - Tepat menolak endpoint yang belum bermigrasi]
 ```
 
-> **Signifikansi Pipeline:** Skrip ini mengembalikan kode keluar `0` saat endpoint memenuhi kepatuhan PQC dan kode keluar `1` saat terjadi regresi. Dengan demikian, skrip ini siap diintegrasikan sebagai *pull request gate* pada GitHub Actions atau GitLab CI untuk menggagalkan *deployment* jika konfigurasi TLS melemah kembali ke mode klasik.
+**Signifikansi Pipeline:** Skrip ini mengembalikan kode keluar `0` saat endpoint memenuhi kepatuhan PQC dan kode keluar `1` saat terjadi regresi. Dengan demikian, skrip ini siap diintegrasikan sebagai *pull request gate* pada GitHub Actions atau GitLab CI untuk menggagalkan *deployment* jika konfigurasi TLS melemah kembali ke mode klasik.
 
 #### Dokumentasi Bukti Eksekusi Langkah 6:
 ![Bukti Eksekusi Langkah 6 - Gerbang Verifikasi CI](dokumentasi/06_ci_gate_verification.png)
-
----
 
 ## 5. Evaluasi Gerbang Kompetensi
 
@@ -352,8 +325,6 @@ Berikut adalah pembahasan dan jawaban ilmiah kelompok atas 5 pertanyaan evaluasi
 **Jawaban:**
 Uji kasus gagal diperlukan untuk memvalidasi sensitivitas dan keandalan gerbang pengujian (*test gate efficacy*). Jika gerbang CI hanya diuji pada kondisi sukses, tim tidak memiliki bukti bahwa skrip tersebut benar-benar mengevaluasi negosiasi PQC secara substansial atau sekadar selalu mengeluarkan kode keluar `0` (*false negative absence*). Dengan membuktikan bahwa skrip menghasilkan kode keluar `1` saat berhadapan dengan server lokal murni klasik maupun endpoint publik non-PQC, terbukti bahwa pipeline CI/CD akan secara andal memblokir proses integrasi/deployment ketika terjadi regresi konfigurasi keamanan.
 
----
-
 ## 6. Kesimpulan dan Rekomendasi Arsitektur
 
 Berdasarkan seluruh rangkaian praktikum yang telah dilaksanakan, Kelompok 1 menyimpulkan beberapa poin strategis:
@@ -363,8 +334,6 @@ Berdasarkan seluruh rangkaian praktikum yang telah dilaksanakan, Kelompok 1 meny
    - Mengaktifkan *TLS Session Resumption* / *Pre-Shared Key* (PSK) guna meminimalkan frekuensi *full handshake*.
    - Menerapkan kompresi sertifikat TLS sesuai spesifikasi **RFC 8879**.
    - Melakukan penyesuaian konfigurasi MTU/MSS clamping pada router dan gateway VPN.
-
----
 
 ## 7. Lampiran Berkas dan Struktur Artefak
 
