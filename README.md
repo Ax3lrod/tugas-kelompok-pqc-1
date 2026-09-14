@@ -3,13 +3,13 @@
 
 Repositori ini memuat implementasi, artefak pengujian, bukti dokumentasi, dan laporan untuk **Praktikum 3 (Web, API, dan PKI)**.
 
-### Anggota Kelompok 1:
-1. **Aryasatya Alaauddin**
-2. **Fiorenza Adelia Nalle**
-3. **Muhamad Arrayyan**
-4. **Dzaky Ahnaf**
-5. **Azza Farichi**
-6. **Naufal**
+### Anggota Kelompok:
+1. **Aryasatya Alaauddin** - **5027231082** 
+2. **Fiorenza Adelia Nalle** - **5027231053**
+3. **Muhamad Arrayyan** - **5027231014**
+4. **Muhammad Dzaky Ahnaf** - **5027231039**
+5. **Azza Farichi Tjahjono** - **5027231071**
+6. **Naufal Syafi' Hakim** - **5027231022**
 
 ### Laporan Praktikum
 Laporan lengkap praktikum dapat diakses pada:

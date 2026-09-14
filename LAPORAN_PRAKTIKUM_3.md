@@ -1,16 +1,15 @@
 # LAPORAN TUGAS PRAKTIKUM KRIPTOGRAFI PASCA-KUANTUM
 ## MODUL 03: INTEGRASI APLIKASI WEB, API, DAN PUBLIC KEY INFRASTRUCTURE (PKI)
 
-### Informasi Kelompok
-**Kelompok:** 1  
+### Informasi Kelompok  
 **Topik:** Pengujian dan Penerapan Kriptografi Pasca-Kuantum (Post-Quantum Cryptography) pada Web, API, dan PKI  
 **Anggota Kelompok:**
-1. **Aryasatya Alaauddin**
-2. **Fiorenza Adelia Nalle**
-3. **Muhamad Arrayyan**
-4. **Dzaky Ahnaf**
-5. **Azza Farichi**
-6. **Naufal**
+1. **Aryasatya Alaauddin** - **5027231082** 
+2. **Fiorenza Adelia Nalle** - **5027231053**
+3. **Muhamad Arrayyan** - **5027231014**
+4. **Muhammad Dzaky Ahnaf** - **5027231039**
+5. **Azza Farichi Tjahjono** - **5027231071**
+6. **Naufal Syafi' Hakim** - **5027231022**
 
 **Repositori Proyek:** [https://github.com/Ax3lrod/tugas-kelompok-pqc-1](https://github.com/Ax3lrod/tugas-kelompok-pqc-1)  
 **Waktu Pelaksanaan:** September 2026  
@@ -327,7 +326,7 @@ Uji kasus gagal diperlukan untuk memvalidasi sensitivitas dan keandalan gerbang 
 
 ## 6. Kesimpulan dan Rekomendasi Arsitektur
 
-Berdasarkan seluruh rangkaian praktikum yang telah dilaksanakan, Kelompok 1 menyimpulkan beberapa poin strategis:
+Berdasarkan seluruh rangkaian praktikum yang telah dilaksanakan, kelompok kami menyimpulkan beberapa poin strategis:
 1. **Kesiapan Teknologi PQC:** Implementasi praktis TLS 1.3 hibrida (`X25519MLKEM768`) dan PKI berbasis kisi (`ML-DSA-65`) telah siap dioperasikan menggunakan standar OpenSSL 3.5+.
 2. **Prioritas Migrasi Bertahap:** Strategi migrasi yang paling rasional adalah memprioritaskan **pertukaran kunci hibrida (KEM)** pada layer transport terlebih dahulu guna mengamankan data dari ancaman *Harvest Now, Decrypt Later*. Migrasi PKI sertifikat publik dapat dilakukan bertahap mengingat tingginya penambahan beban ukuran DER (~11–12x lipat).
 3. **Mitigasi Fragmentasi Jaringan:** Untuk mengatasi risiko *ClientHello split* pada MTU 1500, organisasi disarankan untuk:
