@@ -1,0 +1,9 @@
+# Daftar contoh untuk Praktikum 1.
+# Ganti dengan domain yang benar-benar Anda kenal dan pakai sehari-hari.
+# Format: domain,sektor
+#
+# Isi sendiri minimal 20 baris, tersebar di beberapa sektor.
+# Sertakan kampus Anda, bank Anda, dan satu layanan pemerintah.
+
+cloudflare.com,pembanding-global
+google.com,pembanding-global

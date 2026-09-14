@@ -1,0 +1,365 @@
+[2026-09-14 13:32:13] Memulai eksekusi Praktikum 3...
+Versi OpenSSL:
+OpenSSL 3.5.4 30 Sep 2025 (Library: OpenSSL 3.5.4 30 Sep 2025)
+built on: Mon Sep 14 12:44:57 2026 UTC
+platform: linux-x86_64
+options:  bn(64,64)
+compiler: gcc -fPIC -pthread -m64 -Wa,--noexecstack -Wall -O3 -DOPENSSL_USE_NODELETE -DL_ENDIAN -DOPENSSL_PIC -DOPENSSL_BUILDING_OPENSSL -DNDEBUG
+OPENSSLDIR: "/opt/openssl35/ssl"
+ENGINESDIR: "/opt/openssl35/lib64/engines-3"
+MODULESDIR: "/opt/openssl35/lib64/ossl-modules"
+Seeding source: os-specific
+CPUINFO: OPENSSL_ia32cap=0xfffa32235f8bffff:0x184007a4219c27ab:0x00000810bc104410:0x0000000000000000:0x0000000000000000
+
+========================================================
+LANGKAH 1: MEMBANGUN OTORITAS SERTIFIKAT (PKI) SENDIRI
+========================================================
+[1.1] Menerbitkan Root CA Pasca-Kuantum (ML-DSA-65)...
+Can't open "/opt/openssl35/ssl/openssl.cnf" for reading, No such file or directory
+80BB216E3E7F0000:error:80000002:system library:BIO_new_file:No such file or directory:crypto/bio/bss_file.c:67:calling fopen(/opt/openssl35/ssl/openssl.cnf, r)
+80BB216E3E7F0000:error:10000080:BIO routines:BIO_new_file:no such file:crypto/bio/bss_file.c:75:
+[2026-09-14 13:33:09] Memulai eksekusi Praktikum 3...
+Versi OpenSSL:
+OpenSSL 3.5.4 30 Sep 2025 (Library: OpenSSL 3.5.4 30 Sep 2025)
+built on: Mon Sep 14 12:44:57 2026 UTC
+platform: linux-x86_64
+options:  bn(64,64)
+compiler: gcc -fPIC -pthread -m64 -Wa,--noexecstack -Wall -O3 -DOPENSSL_USE_NODELETE -DL_ENDIAN -DOPENSSL_PIC -DOPENSSL_BUILDING_OPENSSL -DNDEBUG
+OPENSSLDIR: "/opt/openssl35/ssl"
+ENGINESDIR: "/opt/openssl35/lib64/engines-3"
+MODULESDIR: "/opt/openssl35/lib64/ossl-modules"
+Seeding source: os-specific
+CPUINFO: OPENSSL_ia32cap=0xfffa32235f8bffff:0x184007a4219c27ab:0x00000810bc104410:0x0000000000000000:0x0000000000000000
+
+========================================================
+LANGKAH 1: MEMBANGUN OTORITAS SERTIFIKAT (PKI) SENDIRI
+========================================================
+[1.1] Menerbitkan Root CA Pasca-Kuantum (ML-DSA-65)...
+-----
+[1.2] Verifikasi sertifikat Root CA (15 baris pertama):
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            5a:d9:7d:a9:33:40:8f:ae:af:c2:f5:15:a7:55:22:75:f7:af:bb:93
+        Signature Algorithm: ML-DSA-65
+        Issuer: C=ID, O=Lab PQC, CN=Root CA PQC
+        Validity
+            Not Before: Sep 14 13:33:09 2026 GMT
+            Not After : Sep 11 13:33:09 2036 GMT
+        Subject: C=ID, O=Lab PQC, CN=Root CA PQC
+        Subject Public Key Info:
+            Public Key Algorithm: ML-DSA-65
+                ML-DSA-65 Public-Key:
+                pub:
+[1.3] Menerbitkan sertifikat Server (ML-DSA-65)...
+-----
+Certificate request self-signature ok
+subject=C=ID, O=Lab PQC, CN=localhost
+[1.4] Verifikasi sertifikat Server terhadap Root CA:
+server.crt: OK
+
+========================================================
+LANGKAH 2: MENGUKUR HARGA SERTIFIKAT (ML-DSA VS ECDSA)
+========================================================
+[2.1] Membuat sertifikat pembanding klasik (ECDSA P-256)...
+-----
+-----
+Certificate request self-signature ok
+subject=C=ID, O=Lab Klasik, CN=localhost
+[2.2] Mengekspor sertifikat ke format biner DER...
+[2.3] Daftar dan ukuran berkas DER:
+-rw-r--r-- 1 root root  456 Sep 14 13:33 ca_ec.der
+-rw-r--r-- 1 root root 5.5K Sep 14 13:33 ca_pqc.der
+-rw-r--r-- 1 root root  503 Sep 14 13:33 server_ec.der
+-rw-r--r-- 1 root root 5.5K Sep 14 13:33 server_pqc.der
+
+============================================================
+HASIL ANALISIS UKURAN SERTIFIKAT DER
+============================================================
+Root CA ML-DSA-65         :  5,576 bytes
+Root CA ECDSA P-256       :    456 bytes
+Selisih Root CA           :  5,120 bytes (rasio: 12.23x)
+Server Cert ML-DSA-65     :  5,624 bytes
+Server Cert ECDSA P-256   :    503 bytes
+Selisih Server Cert       :  5,121 bytes (rasio: 11.18x)
+Selisih per rantai 3 cert : 15,363 bytes
+
+============================================================
+PROYEKSI ANGGARAN BANDWIDTH (5.000 koneksi baru/detik)
+============================================================
+Overhead transmisi per detik :    73.26 MB/s
+Overhead transmisi per jam   :   257.54 GB/jam
+Overhead transmisi per bulan :   181.08 TB/bulan
+============================================================
+
+========================================================
+LANGKAH 3: MENJALANKAN SERVER & KLIEN TLS PASCA-KUANTUM
+========================================================
+[3.1] Menjalankan TLS 1.3 Server di port 4433 (groups: X25519MLKEM768)...
+Using default temp DH parameters
+ACCEPT
+[3.2] Menghubungi Server dari Klien (memeriksa 3 baris kunci)...
+Peer signature type: mldsa65
+Negotiated TLS1.3 group: X25519MLKEM768
+Verify return code: 0 (ok)
+    Verify return code: 0 (ok)
+    Verify return code: 0 (ok)
+
+========================================================
+LANGKAH 4: mTLS ANTAR-LAYANAN (MUTUAL TLS)
+========================================================
+[4.1] Menerbitkan sertifikat Klien (ML-DSA-65)...
+-----
+Certificate request self-signature ok
+subject=C=ID, O=Lab PQC, CN=layanan-internal
+[4.2] Menjalankan Server dengan verifikasi klien wajib (-Verify 1) di port 4434...
+verify depth is 1, must return a certificate
+Using default temp DH parameters
+ACCEPT
+[4.3] Uji TANPA sertifikat klien (harus GAGAL):
+809BBF81D97F0000:error:0A0000C7:SSL routines:tls_process_client_certificate:peer did not return a certificate:ssl/statem/statem_srvr.c:3731:
+Expansion: NONE
+No ALPN negotiated
+Early data was not sent
+Verify return code: 0 (ok)
+---
+80AB8AFB4F7F0000:error:0A00045C:SSL routines:ssl3_read_bytes:tlsv13 alert certificate required:ssl/record/rec_layer_s3.c:916:SSL alert number 116
+Hasil uji tanpa cert klien: (exit code 1 - Sesuai ekspektasi ditolak server)
+[4.4] Uji DENGAN sertifikat klien (harus BERHASIL):
+depth=1 C=ID, O=Lab PQC, CN=Root CA PQC
+verify return:1
+depth=0 C=ID, O=Lab PQC, CN=layanan-internal
+verify return:1
+Peer signature type: mldsa65
+Negotiated TLS1.3 group: X25519MLKEM768
+Verify return code: 0 (ok)
+
+========================================================
+LANGKAH 5: MENANGKAP CLIENTHELLO YANG PECAH (TCPDUMP)
+========================================================
+[5.1] Menjalankan server untuk tangkapan paket di port 4435...
+Using default temp DH parameters
+ACCEPT
+[5.2] Menangkap handshake Klasik (X25519)...
+[5.3] Menangkap handshake Hibrida (X25519MLKEM768)...
+[5.4] Analisis ukuran berkas pcap:
+-rw-r--r-- 1 tcpdump tcpdump 14K Sep 14 13:33 hibrida.pcap
+-rw-r--r-- 1 tcpdump tcpdump 12K Sep 14 13:33 klasik.pcap
+
+--- Analisis Paket Handshake Klasik (paket pertama) ---
+13:33:19.389686 IP 127.0.0.1.59130 > 127.0.0.1.4435: Flags [S], seq 2769707539, win 65495, options [mss 65495,sackOK,TS val 2496298564 ecr 0,nop,wscale 7], length 0
+13:33:19.389697 IP 127.0.0.1.4435 > 127.0.0.1.59130: Flags [S.], seq 379971814, ack 2769707540, win 65483, options [mss 65495,sackOK,TS val 2496298564 ecr 2496298564,nop,wscale 7], length 0
+13:33:19.389708 IP 127.0.0.1.59130 > 127.0.0.1.4435: Flags [.], ack 1, win 512, options [nop,nop,TS val 2496298564 ecr 2496298564], length 0
+13:33:19.390015 IP 127.0.0.1.59130 > 127.0.0.1.4435: Flags [P.], seq 1:218, ack 1, win 512, options [nop,nop,TS val 2496298564 ecr 2496298564], length 217
+13:33:19.390052 IP 127.0.0.1.4435 > 127.0.0.1.59130: Flags [.], ack 218, win 510, options [nop,nop,TS val 2496298564 ecr 2496298564], length 0
+13:33:19.390620 IP 127.0.0.1.4435 > 127.0.0.1.59130: Flags [P.], seq 1:4097, ack 218, win 512, options [nop,nop,TS val 2496298565 ecr 2496298564], length 4096
+13:33:19.390672 IP 127.0.0.1.59130 > 127.0.0.1.4435: Flags [.], ack 4097, win 491, options [nop,nop,TS val 2496298565 ecr 2496298565], length 0
+13:33:19.392802 IP 127.0.0.1.4435 > 127.0.0.1.59130: Flags [P.], seq 4097:8193, ack 218, win 512, options [nop,nop,TS val 2496298567 ecr 2496298565], length 4096
+
+--- Analisis Paket Handshake Hibrida (paket pertama) ---
+13:33:21.512665 IP 127.0.0.1.59134 > 127.0.0.1.4435: Flags [S], seq 2604940297, win 65495, options [mss 65495,sackOK,TS val 2496300687 ecr 0,nop,wscale 7], length 0
+13:33:21.512677 IP 127.0.0.1.4435 > 127.0.0.1.59134: Flags [S.], seq 3974998939, ack 2604940298, win 65483, options [mss 65495,sackOK,TS val 2496300687 ecr 2496300687,nop,wscale 7], length 0
+13:33:21.512690 IP 127.0.0.1.59134 > 127.0.0.1.4435: Flags [.], ack 1, win 512, options [nop,nop,TS val 2496300687 ecr 2496300687], length 0
+13:33:21.513143 IP 127.0.0.1.59134 > 127.0.0.1.4435: Flags [P.], seq 1:1394, ack 1, win 512, options [nop,nop,TS val 2496300687 ecr 2496300687], length 1393
+13:33:21.513186 IP 127.0.0.1.4435 > 127.0.0.1.59134: Flags [.], ack 1394, win 502, options [nop,nop,TS val 2496300687 ecr 2496300687], length 0
+13:33:21.513816 IP 127.0.0.1.4435 > 127.0.0.1.59134: Flags [P.], seq 1:4097, ack 1394, win 512, options [nop,nop,TS val 2496300688 ecr 2496300687], length 4096
+13:33:21.513873 IP 127.0.0.1.59134 > 127.0.0.1.4435: Flags [.], ack 4097, win 491, options [nop,nop,TS val 2496300688 ecr 2496300688], length 0
+13:33:21.514660 IP 127.0.0.1.4435 > 127.0.0.1.59134: Flags [P.], seq 4097:8193, ack 1394, win 512, options [nop,nop,TS val 2496300689 ecr 2496300688], length 4096
+
+========================================================
+LANGKAH 6: GERBANG VERIFIKASI UNTUK CI (cek_pqc.sh)
+========================================================
+[6.1] Menjalankan server lokal untuk verifikasi CI di port 4436...
+Using default temp DH parameters
+ACCEPT
+[6.2] Uji endpoint lokal (localhost:4436)...
+/kerja/sumberdaya/skrip/cek_pqc.sh: line 1: ﻿#!/usr/bin/env: No such file or directory
+OK    localhost:4436 -> X25519MLKEM768
+Kode keluar localhost: 0
+[6.3] Uji endpoint global (cloudflare.com:443)...
+/kerja/sumberdaya/skrip/cek_pqc.sh: line 1: ﻿#!/usr/bin/env: No such file or directory
+OK    cloudflare.com:443 -> X25519MLKEM768
+Kode keluar cloudflare.com: 0
+[6.4] Uji KASUS GAGAL (endpoint non-PQC: example.com:443)...
+/kerja/sumberdaya/skrip/cek_pqc.sh: line 1: ﻿#!/usr/bin/env: No such file or directory
+OK    example.com:443 -> X25519MLKEM768
+Kode keluar example.com (diharapkan gagal = 1): 0
+
+========================================================
+EKSEKUSI SELESAI DENGAN SUKSES!
+Semua artefak tersimpan di: /kerja/hasil_praktikum3
+========================================================
+[2026-09-14 13:34:19] Memulai eksekusi Praktikum 3...
+Versi OpenSSL:
+OpenSSL 3.5.4 30 Sep 2025 (Library: OpenSSL 3.5.4 30 Sep 2025)
+built on: Mon Sep 14 12:44:57 2026 UTC
+platform: linux-x86_64
+options:  bn(64,64)
+compiler: gcc -fPIC -pthread -m64 -Wa,--noexecstack -Wall -O3 -DOPENSSL_USE_NODELETE -DL_ENDIAN -DOPENSSL_PIC -DOPENSSL_BUILDING_OPENSSL -DNDEBUG
+OPENSSLDIR: "/opt/openssl35/ssl"
+ENGINESDIR: "/opt/openssl35/lib64/engines-3"
+MODULESDIR: "/opt/openssl35/lib64/ossl-modules"
+Seeding source: os-specific
+CPUINFO: OPENSSL_ia32cap=0xfffa32235f8bffff:0x184007a4219c27ab:0x00000810bc104410:0x0000000000000000:0x0000000000000000
+
+========================================================
+LANGKAH 1: MEMBANGUN OTORITAS SERTIFIKAT (PKI) SENDIRI
+========================================================
+[1.1] Menerbitkan Root CA Pasca-Kuantum (ML-DSA-65)...
+-----
+[1.2] Verifikasi sertifikat Root CA (15 baris pertama):
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            3d:94:1a:2c:17:b3:67:58:a3:c0:7a:15:06:e5:2c:86:e1:f9:5d:bf
+        Signature Algorithm: ML-DSA-65
+        Issuer: C=ID, O=Lab PQC, CN=Root CA PQC
+        Validity
+            Not Before: Sep 14 13:34:19 2026 GMT
+            Not After : Sep 11 13:34:19 2036 GMT
+        Subject: C=ID, O=Lab PQC, CN=Root CA PQC
+        Subject Public Key Info:
+            Public Key Algorithm: ML-DSA-65
+                ML-DSA-65 Public-Key:
+                pub:
+[1.3] Menerbitkan sertifikat Server (ML-DSA-65)...
+-----
+Certificate request self-signature ok
+subject=C=ID, O=Lab PQC, CN=localhost
+[1.4] Verifikasi sertifikat Server terhadap Root CA:
+server.crt: OK
+
+========================================================
+LANGKAH 2: MENGUKUR HARGA SERTIFIKAT (ML-DSA VS ECDSA)
+========================================================
+[2.1] Membuat sertifikat pembanding klasik (ECDSA P-256)...
+-----
+-----
+Certificate request self-signature ok
+subject=C=ID, O=Lab Klasik, CN=localhost
+[2.2] Mengekspor sertifikat ke format biner DER...
+[2.3] Daftar dan ukuran berkas DER:
+-rw-r--r-- 1 root root  454 Sep 14 13:34 ca_ec.der
+-rw-r--r-- 1 root root 5.5K Sep 14 13:34 ca_pqc.der
+-rw-r--r-- 1 root root  504 Sep 14 13:34 server_ec.der
+-rw-r--r-- 1 root root 5.5K Sep 14 13:34 server_pqc.der
+
+============================================================
+HASIL ANALISIS UKURAN SERTIFIKAT DER
+============================================================
+Root CA ML-DSA-65         :  5,576 bytes
+Root CA ECDSA P-256       :    454 bytes
+Selisih Root CA           :  5,122 bytes (rasio: 12.28x)
+Server Cert ML-DSA-65     :  5,624 bytes
+Server Cert ECDSA P-256   :    504 bytes
+Selisih Server Cert       :  5,120 bytes (rasio: 11.16x)
+Selisih per rantai 3 cert : 15,360 bytes
+
+============================================================
+PROYEKSI ANGGARAN BANDWIDTH (5.000 koneksi baru/detik)
+============================================================
+Overhead transmisi per detik :    73.24 MB/s
+Overhead transmisi per jam   :   257.49 GB/jam
+Overhead transmisi per bulan :   181.05 TB/bulan
+============================================================
+
+========================================================
+LANGKAH 3: MENJALANKAN SERVER & KLIEN TLS PASCA-KUANTUM
+========================================================
+[3.1] Menjalankan TLS 1.3 Server di port 4433 (groups: X25519MLKEM768)...
+Using default temp DH parameters
+ACCEPT
+[3.2] Menghubungi Server dari Klien (memeriksa 3 baris kunci)...
+Peer signature type: mldsa65
+Negotiated TLS1.3 group: X25519MLKEM768
+Verify return code: 0 (ok)
+
+========================================================
+LANGKAH 4: mTLS ANTAR-LAYANAN (MUTUAL TLS)
+========================================================
+[4.1] Menerbitkan sertifikat Klien (ML-DSA-65)...
+-----
+Certificate request self-signature ok
+subject=C=ID, O=Lab PQC, CN=layanan-internal
+[4.2] Menjalankan Server dengan verifikasi klien wajib (-Verify 1) di port 4434...
+verify depth is 1, must return a certificate
+Using default temp DH parameters
+ACCEPT
+[4.3] Uji TANPA sertifikat klien (harus GAGAL):
+809B1D8B717F0000:error:0A0000C7:SSL routines:tls_process_client_certificate:peer did not return a certificate:ssl/statem/statem_srvr.c:3731:
+Expansion: NONE
+No ALPN negotiated
+Early data was not sent
+Verify return code: 0 (ok)
+---
+80FB94BF747F0000:error:0A00045C:SSL routines:ssl3_read_bytes:tlsv13 alert certificate required:ssl/record/rec_layer_s3.c:916:SSL alert number 116
+Hasil uji tanpa cert klien: (exit code 1 - Sesuai ekspektasi ditolak server)
+[4.4] Uji DENGAN sertifikat klien (harus BERHASIL):
+depth=1 C=ID, O=Lab PQC, CN=Root CA PQC
+verify return:1
+depth=0 C=ID, O=Lab PQC, CN=layanan-internal
+verify return:1
+Peer signature type: mldsa65
+Negotiated TLS1.3 group: X25519MLKEM768
+Verify return code: 0 (ok)
+
+========================================================
+LANGKAH 5: MENANGKAP CLIENTHELLO YANG PECAH (TCPDUMP)
+========================================================
+[5.1] Menjalankan server untuk tangkapan paket di port 4435...
+Using default temp DH parameters
+ACCEPT
+[5.2] Menangkap handshake Klasik (X25519)...
+[5.3] Menangkap handshake Hibrida (X25519MLKEM768)...
+[5.4] Analisis ukuran berkas pcap:
+-rw-r--r-- 1 tcpdump tcpdump 14K Sep 14 13:34 hibrida.pcap
+-rw-r--r-- 1 tcpdump tcpdump 12K Sep 14 13:34 klasik.pcap
+
+--- Analisis Paket Handshake Klasik (paket pertama) ---
+13:34:28.828984 IP 127.0.0.1.56398 > 127.0.0.1.4435: Flags [S], seq 3412447248, win 65495, options [mss 65495,sackOK,TS val 2496368009 ecr 0,nop,wscale 7], length 0
+13:34:28.828995 IP 127.0.0.1.4435 > 127.0.0.1.56398: Flags [S.], seq 999289408, ack 3412447249, win 65483, options [mss 65495,sackOK,TS val 2496368009 ecr 2496368009,nop,wscale 7], length 0
+13:34:28.829006 IP 127.0.0.1.56398 > 127.0.0.1.4435: Flags [.], ack 1, win 512, options [nop,nop,TS val 2496368009 ecr 2496368009], length 0
+13:34:28.829293 IP 127.0.0.1.56398 > 127.0.0.1.4435: Flags [P.], seq 1:218, ack 1, win 512, options [nop,nop,TS val 2496368010 ecr 2496368009], length 217
+13:34:28.829322 IP 127.0.0.1.4435 > 127.0.0.1.56398: Flags [.], ack 218, win 510, options [nop,nop,TS val 2496368010 ecr 2496368010], length 0
+13:34:28.829715 IP 127.0.0.1.4435 > 127.0.0.1.56398: Flags [P.], seq 1:4097, ack 218, win 512, options [nop,nop,TS val 2496368010 ecr 2496368010], length 4096
+13:34:28.829742 IP 127.0.0.1.56398 > 127.0.0.1.4435: Flags [.], ack 4097, win 491, options [nop,nop,TS val 2496368010 ecr 2496368010], length 0
+13:34:28.830733 IP 127.0.0.1.4435 > 127.0.0.1.56398: Flags [P.], seq 4097:8193, ack 218, win 512, options [nop,nop,TS val 2496368011 ecr 2496368010], length 4096
+
+--- Analisis Paket Handshake Hibrida (paket pertama) ---
+13:34:30.915021 IP 127.0.0.1.56408 > 127.0.0.1.4435: Flags [S], seq 890567641, win 65495, options [mss 65495,sackOK,TS val 2496370095 ecr 0,nop,wscale 7], length 0
+13:34:30.915032 IP 127.0.0.1.4435 > 127.0.0.1.56408: Flags [S.], seq 1891512171, ack 890567642, win 65483, options [mss 65495,sackOK,TS val 2496370095 ecr 2496370095,nop,wscale 7], length 0
+13:34:30.915043 IP 127.0.0.1.56408 > 127.0.0.1.4435: Flags [.], ack 1, win 512, options [nop,nop,TS val 2496370096 ecr 2496370095], length 0
+13:34:30.915483 IP 127.0.0.1.56408 > 127.0.0.1.4435: Flags [P.], seq 1:1394, ack 1, win 512, options [nop,nop,TS val 2496370096 ecr 2496370095], length 1393
+13:34:30.915519 IP 127.0.0.1.4435 > 127.0.0.1.56408: Flags [.], ack 1394, win 502, options [nop,nop,TS val 2496370096 ecr 2496370096], length 0
+13:34:30.916120 IP 127.0.0.1.4435 > 127.0.0.1.56408: Flags [P.], seq 1:4097, ack 1394, win 512, options [nop,nop,TS val 2496370097 ecr 2496370096], length 4096
+13:34:30.916163 IP 127.0.0.1.56408 > 127.0.0.1.4435: Flags [.], ack 4097, win 491, options [nop,nop,TS val 2496370097 ecr 2496370097], length 0
+13:34:30.917752 IP 127.0.0.1.4435 > 127.0.0.1.56408: Flags [P.], seq 4097:8193, ack 1394, win 512, options [nop,nop,TS val 2496370098 ecr 2496370097], length 4096
+
+========================================================
+LANGKAH 6: GERBANG VERIFIKASI UNTUK CI (cek_pqc.sh)
+========================================================
+[6.1] Menjalankan server lokal PQC di port 4436...
+Using default temp DH parameters
+ACCEPT
+[6.2] Uji endpoint lokal PQC (localhost:4436)...
+OK    localhost:4436 -> X25519MLKEM768
+Kode keluar localhost: 0
+[6.3] Uji endpoint global PQC (cloudflare.com:443)...
+OK    cloudflare.com:443 -> X25519MLKEM768
+Kode keluar cloudflare.com: 0
+[6.4] Uji KASUS GAGAL: Server lokal murni Klasik (hanya X25519) di port 4437...
+Using default temp DH parameters
+ACCEPT
+806B1A7FCE7F0000:error:0A000065:SSL routines:final_key_share:no suitable key share:ssl/statem/extensions.c:1465:
+GAGAL localhost:4437 tidak menegosiasikan X25519MLKEM768
+Kode keluar server klasik (diharapkan gagal = 1): 1
+[6.5] Uji KASUS GAGAL: Endpoint publik non-PQC (badssl.com:443)...
+GAGAL badssl.com:443 tidak menegosiasikan X25519MLKEM768
+Kode keluar badssl.com (diharapkan gagal = 1): 1
+
+========================================================
+EKSEKUSI SELESAI DENGAN SUKSES!
+Semua artefak tersimpan di: /kerja/hasil_praktikum3
+========================================================

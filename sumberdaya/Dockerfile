@@ -1,0 +1,32 @@
+# Lingkungan praktikum PQC yang sudah lengkap.
+# Bangun:   docker build -t pqc-lab .
+# Jalankan: docker run -it --rm -v "$PWD":/kerja pqc-lab
+
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV OPENSSL_DIR=/opt/openssl35
+ENV PATH="${OPENSSL_DIR}/bin:${PATH}"
+ENV LD_LIBRARY_PATH="${OPENSSL_DIR}/lib64:${OPENSSL_DIR}/lib"
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential cmake ninja-build git wget ca-certificates \
+        python3 python3-pip python3-venv \
+        tcpdump xxd less vim \
+    && rm -rf /var/lib/apt/lists/*
+
+# OpenSSL 3.5 dipasang terpisah agar tidak mengganggu OpenSSL sistem.
+ARG OPENSSL_VERSION=3.5.4
+RUN wget -q "https://github.com/openssl/openssl/releases/download/openssl-${OPENSSL_VERSION}/openssl-${OPENSSL_VERSION}.tar.gz" \
+    && tar xf "openssl-${OPENSSL_VERSION}.tar.gz" \
+    && cd "openssl-${OPENSSL_VERSION}" \
+    && ./Configure --prefix=${OPENSSL_DIR} --openssldir=${OPENSSL_DIR}/ssl \
+    && make -j"$(nproc)" && make install_sw \
+    && cd / && rm -rf "openssl-${OPENSSL_VERSION}" "openssl-${OPENSSL_VERSION}.tar.gz"
+
+COPY requirements.txt /tmp/requirements.txt
+RUN pip3 install --no-cache-dir --break-system-packages -r /tmp/requirements.txt \
+    && python3 -c "import oqs; print('liboqs siap')"
+
+WORKDIR /kerja
+CMD ["/bin/bash"]
